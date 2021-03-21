@@ -75,6 +75,11 @@ class Table : public Attribute {
                attributes.clear();
           }
 
+          void addValues(std::vector<std::string> valVector) {
+
+               
+          }
+
 
 
 

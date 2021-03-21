@@ -32,6 +32,7 @@ Conner Fissell     **-**-2020         1.0  Original version
 class Attribute {
      private: 
           std::string attributeName, attributeType;
+          std::vector<std::string> values;
 
      public:
           Attribute() {};
@@ -52,6 +53,10 @@ class Attribute {
 
           std::string getName() {
                return attributeName;
+          }
+
+          void addValue(std::string val) {
+               values.push_back(val);
           }
           
           
