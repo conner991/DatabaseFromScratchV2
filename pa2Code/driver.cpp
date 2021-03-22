@@ -115,7 +115,7 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
                // Make sure we don't go out of bounds in the string buffer
                if (input.at(i) != ';') {
                     
-                    if (input.at(i) == ' ' && input.at(i + 1) != ' ') {
+                    if ((input.at(i) == ' ' && input.at(i + 1) != ' ') || (input.at(i) == '\t' && input.at(i + 1) != ' ')) {
                     
                          // Creates a string out of the first part of the input
                          word.assign(input, 0, i);

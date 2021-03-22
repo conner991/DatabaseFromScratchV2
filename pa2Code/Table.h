@@ -67,6 +67,28 @@ class Table : public Attribute {
                
           }
 
+          void displayAttributesAndValues() {
+
+               // Print out attributes
+               for (int i = 0; i < attributes.size(); i++) {
+                    
+                    attributes[i].displayAttribute();
+                    std::cout << " | ";
+               }
+
+               std::cout << "\n";
+
+               for (int j = 0; j < attributes[j].getNumOfValues(); j++) {
+
+                    // Print out related values 
+                    for (int k = 0; k < attributes.size(); k++) {
+
+                         attributes[k].displayValue(j);
+                    }
+               }
+               
+          }
+
           std::string getTableName() {
                return tableName;
           }

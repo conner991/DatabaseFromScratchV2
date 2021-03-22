@@ -32,6 +32,7 @@ Conner Fissell     **-**-2020         1.0  Original version
 class Attribute {
      private: 
           std::string attributeName, attributeType;
+          int numOfValues;
           std::vector<std::string> values;
 
      public:
@@ -55,8 +56,20 @@ class Attribute {
                return attributeName;
           }
 
+          int getNumOfValues() {
+               return numOfValues = values.size();
+          }
+
           void addValue(std::string val) {
                values.push_back(val);
+          }
+
+          void displayValue(int i){
+
+
+               std::cout << values[i] << " | ";
+               
+               
           }
           
           
