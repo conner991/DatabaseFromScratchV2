@@ -96,8 +96,8 @@ NOTES:
 ------------------------------------------------------------------------------- */
 bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &running)
 {    
-     std::string word, string2, string3;
-     int spacePosition, numOfSpaces = 0, numOfWords; 
+     std::string word;
+     int spacePosition, numOfSpaces = 0, lengthOfString; 
 
 
      // Make any letters in input string lowercase
@@ -105,41 +105,76 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
      
      // Check to make sure there is a semicolon at the end of the statement
      if (input.back() == ';' || input == ".exit") {
+
+          // Get original length of input string
+          lengthOfString = input.length();
           
-          // Find the number of spaces in the input
-          for(int i = 0; i < input.length(); i++) {
-               if (input.at(i) == ' ')
-               ++numOfSpaces;
-          }
-     
-     
-          // If there are multiple words in the input
-          if (numOfSpaces != 0) {
-          
-               numOfWords = numOfSpaces + 1;
+          // Separate out the individual words in the input string
+          for(int i = 0; i < lengthOfString; i++) {
+
+               // Make sure we don't go out of bounds in the string buffer
+               if (input.at(i) != ';') {
+                    
+                    if (input.at(i) == ' ' && input.at(i + 1) != ' ') {
+                    
+                         // Creates a string out of the first part of the input
+                         word.assign(input, 0, i);
+
+                         // Adds word to the string vector
+                         wordVector.push_back(word);
+
+                         // Need to modify input string to capture the rest of the input words
+                         input.erase(0, i + 1);
+                         
+                         ++numOfSpaces;
+
+                         // Get new length of string
+                         lengthOfString = input.length();
+
+                         // Reset i 
+                         i = 0; 
+
+                    }
                
-               for (int i = 0; i < numOfWords; i++) {
-                    
-                    // Finds the first space in a string and gives us its position number
-                    spacePosition = input.find(' ', 1);
-
-                    // Creates a string out of the first part of the input
-                    word.assign(input, 0, spacePosition);
-                    
-                    // Adds word to the string vector
-                    wordVector.push_back(word);
-
-                    // Need to modify input string to capture the rest of the input words
-                    input.erase(0, spacePosition + 1);
+               
                }
-           
+
+               // We need to capture the last word in the string so as to not leave it behind in input
+               else {
+
+                    wordVector.push_back(input);
+
+               }
+               
+               
           }
+     
 
-
+          // // If there are multiple words in the input
+          // if (numOfSpaces != 0) {
           
-          // There is only one word in the input and it should be .EXIT
-          else {
+          //      //numOfWords = numOfSpaces + 1;
+               
+          //      for (int i = 0; i < input.length(); i++) {
+                    
+          //           // Finds the first space in a string and gives us its position number
+          //           spacePosition = input.find(' ', 1);
 
+          //           // Creates a string out of the first part of the input
+          //           word.assign(input, 0, spacePosition);
+                    
+          //           // Adds word to the string vector
+          //           wordVector.push_back(word);
+
+          //           // Need to modify input string to capture the rest of the input words
+          //           input.erase(0, spacePosition + 1);
+          //      }
+           
+          // }
+
+          // There is only one word in the input and it should be .EXIT
+          if (numOfSpaces == 0) {
+               
                // Add single string to vector
                wordVector.push_back(input);
 
@@ -153,12 +188,7 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
                     wordVector.clear();
                     std::cout << "Unknow Entry\n";
                }
-
-          
           }
-
-
-
           
      }
 
@@ -166,9 +196,6 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
           std::cout << "Input statement must end with a semicolon.\n";
      }
           
-
-     
-
 
      return running;
 
