@@ -36,7 +36,7 @@ void deleteDB(std::string name, std::vector<Database> &databases, int &dbCount);
 void useDB(std::string name, std::vector<Database> &databases, int &dbCount);
 void createTable(std::string name, std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 void dropTable(std::string name, std::vector<Database> &databaseVector);
-void displayTable(std::string name, std::vector<Database> &databaseVector);
+void displayWholeTable(std::string name, std::vector<Database> &databaseVector);
 void addAttribute(std::string table, std::string attName, std::string dt, std::vector<Database> &databaseVector);
 void insert(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 void select(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
@@ -197,7 +197,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
      // Check first word in vector to see if it is one of the beginning SQL keywords
      if (wordVector[0] == "create" || wordVector[0] == "drop" || wordVector[0] == "use" || wordVector[0] == "select" || 
-     wordVector[0] == "alter", wordVector[0] == "insert", wordVector[0] == "update", wordVector[0] == "delete") {
+     wordVector[0] == "alter" || wordVector[0] == "insert" || wordVector[0] == "update"|| wordVector[0] == "delete") {
           
           // CREATE DATABASE or TABLE
           if (wordVector[0] == "create") {
@@ -316,7 +316,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
                          wordVector[3].resize(newSize);
                     
                          // Call displayTable function
-                         displayTable(wordVector[3], databaseVector);
+                         displayWholeTable(wordVector[3], databaseVector);
 
                     }
 
@@ -647,7 +647,7 @@ NOTES:
 void createTable(std::string tableName, std::vector<std::string> &wordVector, std::vector<Database> &databaseVector) 
 {    
      int count = 0, tableExpressionSize, oldSize, newSize;
-     std::string attName, attDT;
+     std::string attName, attDT, appended1, appended2, name, price;
      bool used = false;
      bool inDB = false;
 
@@ -679,6 +679,11 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                     // go through wordVector of strings and create attributes
                     for (int j = 0; j < wordVector.size(); j++) {
 
+                         // Use to find the right strings 
+                         appended1 = wordVector[j].append(name);
+                         appended2 = wordVector[j].append(price);
+
+
                          // Catch the first attribute in the parenthetical expression
                          if (wordVector[j].front() == '(') {
                          
@@ -705,7 +710,7 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                          }
 
                          // To capture other attributes in the expression
-                         else if (wordVector[j].front() == 'a') {
+                         else if (wordVector[j] == "name") {
                          
                               // Store new attribute in attName          
                               attName = wordVector[j];
@@ -740,6 +745,42 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                               // Now add attribute object to the Table attribute object vector
                               newTable.addAttribute(att2);
 
+                         }
+
+                         else if (wordVector[j] == "price") {
+                              
+                              // Store new attribute in attName          
+                              attName = wordVector[j];
+
+                              // Get attribute datatype, either this datatype ends with a ","
+                              if (wordVector[j + 1].back() == ',') {
+                              
+                                   oldSize = wordVector[j + 1].size();
+                                   newSize = oldSize - 1;
+                                   wordVector[j + 1].resize(newSize);
+
+                                   // Store in attDT
+                                   attDT = wordVector[j + 1];
+
+                              }
+
+                              // Or it ends with a ");"
+                              else {
+
+                                   oldSize = wordVector[j + 1].size();
+                                   newSize = oldSize - 2;
+                                   wordVector[j + 1].resize(newSize);
+
+                                   // Store in attDT
+                                   attDT = wordVector[j + 1];
+
+                              }
+
+                              // Add attribute name and datatype to Attribute object
+                              att3.createAttribute(attName, attDT);
+
+                              // Now add attribute object to the Table attribute object vector
+                              newTable.addAttribute(att3);
                          }
 
                     }
@@ -821,7 +862,7 @@ DESCRIPTION:
 RETURNS:           
 NOTES:             
 ------------------------------------------------------------------------------- */
-void displayTable(std::string tableName, std::vector<Database> &databaseVector)
+void displayWholeTable(std::string tableName, std::vector<Database> &databaseVector)
 {    
      bool used = false;
      bool inDB = false;
@@ -932,7 +973,7 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
                tableName = wordVector[2];        
 
                // Erase the beginning string characters off of our first attribute value
-               wordVector[3].erase(0, 7);
+               wordVector[3].erase(0, 6);
 
                // Now take off the , at the end
                oldSize = wordVector[3].size();
@@ -977,21 +1018,18 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
                          // values to their corresponding attribute objects
                          databaseVector[i].tables[j].addValues(valueHolder);
 
+                         std::cout << "1 new record inserted.\n";
+
                     }
 
-                    
+                    else {
+                         std::cout << "Table not found.\n";
+                    }
 
                }
 
-
+               valueHolder.clear();
           }
-
-
-
-
-
-
-
           
      }
 

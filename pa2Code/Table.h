@@ -77,7 +77,12 @@ class Table : public Attribute {
 
           void addValues(std::vector<std::string> valVector) {
 
-               
+               // Here we add each value in valVector to it's corresponding attribute object
+               // using the addValue method in the Attribute class
+               for (int i = 0; i < attributes.size(); i++) {
+                    attributes[i].addValue(valVector[i]);
+               }
+
           }
 
 
