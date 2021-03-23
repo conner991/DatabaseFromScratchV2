@@ -906,7 +906,7 @@ void displayWholeTable(std::string tableName, std::vector<Database> &databaseVec
 
                     if (tableName == databaseVector[i].tables[j].getTableName()) {
                          
-                         databaseVector[i].tables[j].displayAttributes();
+                         databaseVector[i].tables[j].displayAttributesAndValues();
                          inDB = true;
                          
                     }
@@ -1000,7 +1000,7 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
                tableName = wordVector[2];        
 
                // Erase the beginning string characters off of our first attribute value
-               wordVector[3].erase(0, 6);
+               wordVector[3].erase(0, 7);
 
                // Now take off the , at the end
                oldSize = wordVector[3].size();
@@ -1013,9 +1013,9 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
 
                // Now to get our second value
                // Take off the "," at the end
-               oldSize = wordVector[4].size();
-               newSize = oldSize - 1;
-               wordVector[4].resize(newSize);
+               // oldSize = wordVector[4].size();
+               // newSize = oldSize - 1;
+               // wordVector[4].resize(newSize);
 
                // Store in value string for readability 
                value2 = wordVector[4];

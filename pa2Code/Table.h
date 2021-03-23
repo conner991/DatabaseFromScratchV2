@@ -85,6 +85,8 @@ class Table : public Attribute {
 
                          attributes[k].displayValue(j);
                     }
+
+                    std::cout << "\n";
                }
                
           }
