@@ -66,10 +66,19 @@ class Attribute {
 
           void displayValue(int i){
 
-
                std::cout << values[i] << " | ";
-               
-               
+                   
+          }
+
+          std::string getValue(std::string val) {
+
+               for (int i = 0; i < values.size(); i++) {
+
+                    if (val == values[i]) {
+                         return values[i];
+                    }
+               }
+
           }
           
           

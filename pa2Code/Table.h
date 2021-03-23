@@ -35,6 +35,28 @@ class Table : public Attribute {
                attributes.push_back(a);
           }
 
+          int getNumOfAttributes() {
+               
+               numOfAttributes = attributes.size();
+               
+               return numOfAttributes;
+          }
+
+          std::string getAttribute(std::string attName) {
+
+               // Cycle through vector of attributes
+               for (int i = 0; i < attributes.size(); i++) {
+
+                    if (attributes[i].getName() == attName) {
+                         return attributes[i].getName();
+                    }
+
+                    else {
+                         std::cout << "Attribute not found.\n";
+                    }
+               }
+          }
+
           void removeAttribute(Attribute a) {
                
                Attribute tempAtt;
@@ -105,6 +127,30 @@ class Table : public Attribute {
                // using the addValue method in the Attribute class
                for (int i = 0; i < attributes.size(); i++) {
                     attributes[i].addValue(valVector[i]);
+               }
+
+          }
+
+          std::string getAttValue(std::string attName, std::string val) {
+
+               // search for passed in value in attributes vector object
+               // Cycle through vector of attributes
+               for (int i = 0; i < attributes.size(); i++) {
+
+                    if (attributes[i].getName() == attName) {
+                         
+                         // search for specific value within the attribute object
+                         for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
+
+                              if (val == attributes[i].getValue(val)) {
+                                   
+                                   return attributes[i].getValue(val);
+                              }
+                         }
+
+                         
+                    }
+
                }
 
           }

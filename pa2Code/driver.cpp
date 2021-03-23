@@ -1091,6 +1091,12 @@ void select(std::vector<std::string> &wordVector, std::vector<Database> &databas
           }
      }
 
+     if (!used) {
+
+          // Must be using a database in order to create a table 
+          std::cout << "Failed to select values because there is no database in use.\n";
+     }
+
 }
 
 /* -----------------------------------------------------------------------------
@@ -1102,8 +1108,9 @@ NOTES:
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
 {
      bool used = false;
-     bool inDB = false;
+     bool inDB = false, inDB = false, inTable = false;
      int tableCount = 0;
+     std::string tableName;
 
      // Check for a database that's in use
      for (int i = 0; i < databaseVector.size(); i++) {
@@ -1112,8 +1119,60 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                used = true;
 
+               // Get table name that we're inserting into
+               tableName = wordVector[1];
+
+               // Search for the table we're working with 
+               for (int j = 0; j < databaseVector[i].tables.size(); j++) {
+
+                    if (tableName == databaseVector[i].tables[j].getTableName()) {
+
+                         inDB = true;
+
+                         if (wordVector[2] == "set") {
+
+                              // Search for attribute name to modify
+                              for (int k = 0; k < databaseVector[i].tables[j].getNumOfAttributes(); k++) {
+
+                                   // If attribute exists in table
+                                   if (wordVector[3] == databaseVector[i].tables[j].getAttribute(wordVector[3])) {
+
+                                        inTable = true;
+
+
+
+                                   }
+
+                                   
+                              }
+
+                              if (!inTable) {
+                                   std::cout << "Attribute not found.\n";
+                              }
+
+                         }
+
+                         else {
+                              std::cout << "SET must follow UPDATE and Table Name\n";
+                         }
+
+                    
+                    }
+
                
+               }
+
+               if (!inDB) {
+                    std::cout << "Table not found.\n";
+               }
+
           }
+     }
+
+     if (!used) {
+
+          // Must be using a database in order to update values
+          std::cout << "Failed to update values because there is no database in use.\n";
      }
 
 }
@@ -1139,6 +1198,12 @@ void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                
           }
+     }
+
+     if (!used) {
+
+          // Must be using a database in order to create a table 
+          std::cout << "Failed to delete values because there is no database in use.\n";
      }
 
 }
