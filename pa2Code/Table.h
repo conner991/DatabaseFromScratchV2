@@ -50,10 +50,25 @@ class Table : public Attribute {
                     if (attributes[i].getName() == attName) {
                          return attributes[i].getName();
                     }
+               }
+          }
 
-                    else {
-                         std::cout << "Attribute not found.\n";
+          bool attInTable(std::string attName) {
+
+               bool inTable = false;
+
+               // Cycle through vector of attributes
+               for (int i = 0; i < attributes.size(); i++) {
+
+                    if (attributes[i].getName() == attName) {
+                         inTable = true;
+                         return inTable;
                     }
+               }
+
+               if (!inTable) {
+                    std::cout << "Attribute not found.\n";
+                    return inTable;
                }
           }
 
@@ -154,6 +169,117 @@ class Table : public Attribute {
                }
 
           }
+
+          bool updateAttValue(std::string whereAttName, std::string setAttName, std::string oldValue, std::string newValue) {
+
+               bool success = false;
+               int where, set;
+
+
+               // if we're updating the same attribute
+               if (whereAttName == setAttName) {
+
+                    // Cycle through vector of attributes
+                    for (int i = 0; i < attributes.size(); i++) {
+                    
+                         if (attributes[i].getName() == setAttName) {
+
+                              success = attributes[i].updateValue(oldValue, newValue);
+                              return success;
+
+                         }      
+                    }              
+
+               }
+
+               // We're changing an attribute value based on a different attributes value
+               else {
+
+                    // search for passed in value in attributes vector object
+                    // Cycle through vector of attributes
+                    for (int i = 0; i < attributes.size(); i++) {
+
+                         // Find our deciding attribute
+                         if (attributes[i].getName() == whereAttName) {
+                         
+                              // find our "where" attribute number
+                              int where = i;
+                         
+                         }
+
+                         // Find our set attribute
+                         if (attributes[i].getName() == setAttName) {
+                         
+                              // find our "set" attribute number
+                              int set = i;
+                         
+                         }
+
+                    }
+
+               }
+               
+
+
+
+
+
+
+
+
+
+
+
+
+               
+
+
+
+
+                         // search for specific value within the attribute object
+                         for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
+                              
+                              // if value found 
+                              if (oldValue == attributes[i].getValue(oldValue)) {
+                                   
+                                   // replace oldValue with newValue
+                                   if (attributes[i].updateValue(oldValue, newValue)) {
+                                        success = true;
+                                        return success;
+                                   }
+
+                                   if (!success) {
+                                        return success;
+                                   }
+
+                                   
+                              }
+                         }
+
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

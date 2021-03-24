@@ -80,6 +80,40 @@ class Attribute {
                }
 
           }
+
+          int getNumOfDuplicates(std::string value) {
+
+               int count = 0;
+
+               // figures out how many of the same value are in this attribute
+               for (int i = 0; i < values.size(); i++) {
+
+                    if (values[i] == value) {
+                         count++;
+                    }
+                    
+               }
+
+               return count;
+
+          }
+
+          bool updateValue(std::string oldValue, std::string newValue) {
+
+               bool success = false;
+
+               for (int i = 0; i < values.size(); i++) {
+
+                    if (oldValue == values[i]) {
+                         
+                         values[i] = newValue;
+                         success = true;
+                    }
+               }
+
+               return success;
+
+          }
           
           
 

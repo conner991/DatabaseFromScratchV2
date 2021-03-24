@@ -1108,9 +1108,9 @@ NOTES:
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
 {
      bool used = false;
-     bool inDB = false, inDB = false, inTable = false;
+     bool inDB = false, inDB = false, inTable = false, valueFound = false;
      int tableCount = 0;
-     std::string tableName;
+     std::string tableName, setAttName, whereAttName, newUpdate, oldValue;
 
      // Check for a database that's in use
      for (int i = 0; i < databaseVector.size(); i++) {
@@ -1119,9 +1119,6 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                used = true;
 
-               // Get table name that we're inserting into
-               tableName = wordVector[1];
-
                // Search for the table we're working with 
                for (int j = 0; j < databaseVector[i].tables.size(); j++) {
 
@@ -1129,22 +1126,48 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                          inDB = true;
 
+                         // Get table name that we're inserting into
+                         tableName = wordVector[1]; 
+
                          if (wordVector[2] == "set") {
 
-                              // Search for attribute name to modify
-                              for (int k = 0; k < databaseVector[i].tables[j].getNumOfAttributes(); k++) {
+                              // If attribute exists in table
+                              if ((databaseVector[i].tables[j].attInTable(wordVector[3])) && (databaseVector[i].tables[j].attInTable(wordVector[7]))) {
 
-                                   // If attribute exists in table
-                                   if (wordVector[3] == databaseVector[i].tables[j].getAttribute(wordVector[3])) {
+                                   inTable = true;
+                                   
+                                   // heres our attribute name that we're gonna change the value of
+                                   setAttName = wordVector[3];
 
-                                        inTable = true;
+                                   // heres our attribute name that decides which setAttName value(s) gets updated
+                                   whereAttName = wordVector[7];
+
+                                   // here is our old value
+                                   oldValue = wordVector[9];
+
+                                   // lets get our new string that we're going to update the table with
+                                   newUpdate = wordVector[5];
 
 
+                                   // Now lets search for the value(s) that decide which other attributes values get updated
+                                   if (oldValue == databaseVector[i].tables[j].getAttValue(whereAttName, oldValue)) {
+
+                                        valueFound = true;
+
+                                        if (databaseVector[i].tables[j].changeAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
+
+                                             std::cout << "1 record modified.\n";
+
+                                        }
 
                                    }
 
-                                   
+                                   if (!valueFound) {
+                                        std::cout << "Value to update not found.\n";
+                                   }
+
                               }
+                              
 
                               if (!inTable) {
                                    std::cout << "Attribute not found.\n";
