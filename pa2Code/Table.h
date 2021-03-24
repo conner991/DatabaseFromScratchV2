@@ -68,8 +68,9 @@ class Table : public Attribute {
 
                if (!inTable) {
                     std::cout << "Attribute not found.\n";
-                    return inTable;
                }
+
+               return inTable;
           }
 
           void removeAttribute(Attribute a) {
@@ -146,7 +147,9 @@ class Table : public Attribute {
 
           }
 
-          std::string getAttValue(std::string attName, std::string val) {
+          bool attValueExits(std::string attName, std::string val) {
+
+               bool inAtt = false;
 
                // search for passed in value in attributes vector object
                // Cycle through vector of attributes
@@ -157,9 +160,10 @@ class Table : public Attribute {
                          // search for specific value within the attribute object
                          for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
 
-                              if (val == attributes[i].getValue(val)) {
+                              // If the value is there
+                              if (attributes[i].valuesExist(val)) {
                                    
-                                   return attributes[i].getValue(val);
+                                   inAtt = true;
                               }
                          }
 
@@ -168,12 +172,15 @@ class Table : public Attribute {
 
                }
 
+               return inAtt;
+
           }
 
           bool updateAttValue(std::string whereAttName, std::string setAttName, std::string oldValue, std::string newValue) {
 
-               bool success = false;
+               bool success;
                int where, set;
+               std::vector<int> valueIndexes;
 
 
                // if we're updating the same attribute
@@ -185,14 +192,13 @@ class Table : public Attribute {
                          if (attributes[i].getName() == setAttName) {
 
                               success = attributes[i].updateValue(oldValue, newValue);
-                              return success;
 
                          }      
                     }              
 
                }
 
-               // We're changing an attribute value based on a different attributes value
+               // We're changing an attribute value based on 1 or more different attribute values
                else {
 
                     // search for passed in value in attributes vector object
@@ -217,44 +223,16 @@ class Table : public Attribute {
 
                     }
 
+                    // go into the where attribute and figure out which values are getting counted
+                    attributes[where].getValueIndexes(oldValue, valueIndexes);
+
+                    // Noe go into the set attribute and set the indexes values to the new value
+                    success = attributes[set].updateMultipleValues(newValue, oldValue, valueIndexes);
+
+
                }
-               
 
-
-
-
-
-
-
-
-
-
-
-
-               
-
-
-
-
-                         // search for specific value within the attribute object
-                         for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
-                              
-                              // if value found 
-                              if (oldValue == attributes[i].getValue(oldValue)) {
-                                   
-                                   // replace oldValue with newValue
-                                   if (attributes[i].updateValue(oldValue, newValue)) {
-                                        success = true;
-                                        return success;
-                                   }
-
-                                   if (!success) {
-                                        return success;
-                                   }
-
-                                   
-                              }
-                         }
+               return success;
 
           }
 

@@ -70,12 +70,29 @@ class Attribute {
                    
           }
 
-          std::string getValue(std::string val) {
+          bool valuesExist(std::string val) {
+
+               bool valExists = false; 
 
                for (int i = 0; i < values.size(); i++) {
 
                     if (val == values[i]) {
-                         return values[i];
+                         valExists = true;
+                    }
+               }
+
+               return valExists;
+
+          }
+
+          void getValueIndexes(std::string val, std::vector<int> &valueIndexes) {
+
+               for (int i = 0; i < values.size(); i++) {
+
+                    if (val == values[i]) {
+                         
+                         valueIndexes.push_back(i);
+                         
                     }
                }
 
@@ -109,6 +126,25 @@ class Attribute {
                          values[i] = newValue;
                          success = true;
                     }
+               }
+
+               return success;
+
+          }
+
+          bool updateMultipleValues(std::string newValue, std::string oldValue, std::vector<int> &valueIndexes) {
+
+               bool success = false;
+
+               for (int i = 0; i < valueIndexes.size(); i++) {
+
+                    if (values[valueIndexes[i]] == oldValue) {
+                         values[valueIndexes[i]] = newValue;
+                         success = true;
+                    }
+                    
+
+                    
                }
 
                return success;

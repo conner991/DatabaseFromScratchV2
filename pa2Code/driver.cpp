@@ -1108,7 +1108,7 @@ NOTES:
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
 {
      bool used = false;
-     bool inDB = false, inDB = false, inTable = false, valueFound = false;
+     bool inDB = false, inTable = false, valueFound = false;
      int tableCount = 0;
      std::string tableName, setAttName, whereAttName, newUpdate, oldValue;
 
@@ -1149,12 +1149,13 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
                                    newUpdate = wordVector[5];
 
 
-                                   // Now lets search for the value(s) that decide which other attributes values get updated
-                                   if (oldValue == databaseVector[i].tables[j].getAttValue(whereAttName, oldValue)) {
+                                   // If the value(s) that decide which other attributes values get updated exit 
+                                   if (databaseVector[i].tables[j].attValueExits(whereAttName, oldValue)) {
 
                                         valueFound = true;
-
-                                        if (databaseVector[i].tables[j].changeAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
+                                        
+                                        // Attempt to update the value(s)
+                                        if (databaseVector[i].tables[j].updateAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
 
                                              std::cout << "1 record modified.\n";
 
@@ -1163,7 +1164,7 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
                                    }
 
                                    if (!valueFound) {
-                                        std::cout << "Value to update not found.\n";
+                                        std::cout << "Where value not found.\n";
                                    }
 
                               }
