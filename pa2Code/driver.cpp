@@ -106,48 +106,72 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
      // Check to make sure there is a semicolon at the end of the statement
      if (input.back() == ';' || input == ".exit") {
 
-          // Get original length of input string
-          lengthOfString = input.length();
+
+          const std::regex reg(R"([\s|,|;]+)");
+
+
+          std::sregex_token_iterator it {input.begin(), input.end(), reg, -1};
+
+          std::vector<std::string> wordVector2 {it, {} };
+
+          // additional check to remove empty strings
+          wordVector2.erase(std::remove_if(wordVector2.begin(), wordVector2.end(), [](std::string const& s) {return s.size() == 0;}), wordVector2.end());
+
+          wordVector = wordVector2;
+
+
+
+
+
+
+
+
+
+
+
+
+          // // Get original length of input string
+          // lengthOfString = input.length();
           
-          // Separate out the individual words in the input string
-          for(int i = 0; i < lengthOfString; i++) {
+          // // Separate out the individual words in the input string
+          // for(int i = 0; i < lengthOfString; i++) {
 
-               // Make sure we don't go out of bounds in the string buffer
-               if (input.at(i) != ';') {
+          //      // Make sure we don't go out of bounds in the string buffer
+          //      if (input.at(i) != ';') {
                     
-                    if ((input.at(i) == ' ' && input.at(i + 1) != ' ') || (input.at(i) == '\t' && input.at(i + 1) != ' ')) {
+          //           if ((input.at(i) == ' ' && input.at(i + 1) != ' ') || (input.at(i) == '\t' && input.at(i + 1) != ' ')) {
                     
-                         // Creates a string out of the first part of the input
-                         word.assign(input, 0, i);
+          //                // Creates a string out of the first part of the input
+          //                word.assign(input, 0, i);
 
-                         // Adds word to the string vector
-                         wordVector.push_back(word);
+          //                // Adds word to the string vector
+          //                wordVector.push_back(word);
 
-                         // Need to modify input string to capture the rest of the input words
-                         input.erase(0, i + 1);
+          //                // Need to modify input string to capture the rest of the input words
+          //                input.erase(0, i + 1);
                          
-                         ++numOfSpaces;
+          //                ++numOfSpaces;
 
-                         // Get new length of string
-                         lengthOfString = input.length();
+          //                // Get new length of string
+          //                lengthOfString = input.length();
 
-                         // Reset i 
-                         i = 0; 
+          //                // Reset i 
+          //                i = 0; 
 
-                    }
+          //           }
                
                
-               }
+          //      }
 
-               // We need to capture the last word in the string so as to not leave it behind in input
-               else {
+          //      // We need to capture the last word in the string so as to not leave it behind in input
+          //      else {
 
-                    wordVector.push_back(input);
+          //           wordVector.push_back(input);
 
-               }
+          //      }
                
                
-          }
+          // }
      
 
           // // If there are multiple words in the input
@@ -172,23 +196,27 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
            
           // }
 
+
+
+
+
           // There is only one word in the input and it should be .EXIT
-          if (numOfSpaces == 0) {
+          //if (numOfSpaces == 0) {
                
                // Add single string to vector
-               wordVector.push_back(input);
+               //wordVector.push_back(input);
 
-               if (wordVector[0] == ".exit") {
-                    wordVector.clear();
-                    running = false;
-                    return running;
-               }
+     //           if (wordVector[0] == ".exit") {
+     //                wordVector.clear();
+     //                running = false;
+     //                return running;
+     //           }
 
-               else {
-                    wordVector.clear();
-                    std::cout << "Unknow Entry\n";
-               }
-          }
+     //           else {
+     //                wordVector.clear();
+     //                std::cout << "Unknow Entry\n";
+     //           }
+     //     // }
           
      }
 

@@ -22,6 +22,7 @@ Conner Fissell     **-**-2020         1.0  Original version
 #include <cstring>
 #include <cstdlib>
 #include <vector>
+#include <regex>
 
 #include <stdio.h>
 #include <unistd.h>
