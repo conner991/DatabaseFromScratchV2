@@ -58,14 +58,15 @@ class Attribute {
           }
 
           int getNumOfValues() {
-               return numOfValues = values.size();
+               numOfValues = values.size();
+               return numOfValues; 
           }
 
           void addValue(std::string val) {
                values.push_back(val);
           }
 
-          void displayValue(int i){
+          void displayValue(int &i){
 
                std::cout << values[i] << " | ";
                    

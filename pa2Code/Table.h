@@ -116,7 +116,7 @@ class Table : public Attribute {
 
                std::cout << "\n";
 
-               for (int j = 0; j < attributes[j].getNumOfValues(); j++) {
+               for (int j = 0; j < attributes[0].getNumOfValues(); j++) {
 
                     // Print out related values 
                     for (int k = 0; k < attributes.size(); k++) {

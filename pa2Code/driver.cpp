@@ -107,7 +107,7 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
      if (input.back() == ';' || input == ".exit") {
 
 
-          const std::regex reg(R"([\s|,|;]+)");
+          const std::regex reg(R"([\s|,]+)");
 
 
           std::sregex_token_iterator it {input.begin(), input.end(), reg, -1};
@@ -117,7 +117,7 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
           // additional check to remove empty strings
           wordVector2.erase(std::remove_if(wordVector2.begin(), wordVector2.end(), [](std::string const& s) {return s.size() == 0;}), wordVector2.end());
 
-          wordVector = wordVector2;
+          wordVector = wordVector2; 
 
 
 
@@ -200,23 +200,19 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
 
 
 
-          // There is only one word in the input and it should be .EXIT
-          //if (numOfSpaces == 0) {
-               
-               // Add single string to vector
-               //wordVector.push_back(input);
+          
 
-     //           if (wordVector[0] == ".exit") {
-     //                wordVector.clear();
-     //                running = false;
-     //                return running;
-     //           }
+          if (wordVector[0] == ".exit") {
+               wordVector.clear();
+               running = false;
+               return running;
+          }
 
-     //           else {
-     //                wordVector.clear();
-     //                std::cout << "Unknow Entry\n";
-     //           }
-     //     // }
+          // else {
+          //      wordVector.clear();
+          //      std::cout << "Unknown Entry.\n";
+          // }
+         
           
      }
 
@@ -276,7 +272,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
                // CREATE TABLE
                else if (wordVector[1] == "table") {
 
-                    // Check if there is a "(" following tbl_x
+                    // // Check if there is a "(" following tbl_x
                     frontOfString = wordVector[3].front();
                     if (frontOfString == '(') {
                          
@@ -289,6 +285,8 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
                          std::cout << "parenthetical expression must follow table creation statement\n";
                     }
 
+                    //createTable(wordVector[2], wordVector, databaseVector);
+
                     
                }
 
@@ -299,14 +297,14 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
 
           // DROP DATABASE or TABLE
-          if (wordVector[0] == "drop"){
+          else if (wordVector[0] == "drop") {
                
                // Same as "CREATE" except we're either gonna drop a created database or a table
 
                // DROP DATABASE
                if (wordVector[1] == "database") {
                     
-                    // Theres going to be a ";" at the end of our database name that we need to get rid of
+                    // // Theres going to be a ";" at the end of our database name that we need to get rid of
                     oldSize = wordVector[2].size();
                     newSize = oldSize - 1;
                     wordVector[2].resize(newSize);
@@ -319,7 +317,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
                // DROP TABLE
                else if (wordVector[1] == "table") {
                     
-                    // Theres going to be a ";" at the end of our table name that we need to get rid of
+                    // // Theres going to be a ";" at the end of our table name that we need to get rid of
                     oldSize = wordVector[2].size();
                     newSize = oldSize - 1;
                     wordVector[2].resize(newSize);
@@ -336,7 +334,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
 
           // USE DATABASE
-          if (wordVector[0] == "use") {
+          else if (wordVector[0] == "use") {
      
                // Next word after "USE" is a database name 
                // Theres going to be a ";" at the end of our database name that we need to get rid of
@@ -353,7 +351,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
 
           // SELECT 
-          if (wordVector[0] == "select") {
+          else if (wordVector[0] == "select") {
  
                // SELECT is always going to be followed by an action performed on a table
                
@@ -389,7 +387,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
 
           // ALTER TABLE
-          if (wordVector[0] == "alter"){
+          else if (wordVector[0] == "alter"){
                
                // Next word after "alter" is only ever going to be a SQL table keyword and that must be a created table
                if (wordVector[1] == "table") {
@@ -419,7 +417,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
           }
 
           // INSERT 
-          if (wordVector[0] == "insert") {
+          else if (wordVector[0] == "insert") {
 
                if (wordVector[1] == "into") {
 
@@ -434,14 +432,14 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
           }
 
           // UPDATE 
-          if (wordVector[0] == "update") {
+          else if (wordVector[0] == "update") {
 
                // Here we'll update our table by changing specific attName values to other values
                updateTable(wordVector, databaseVector);
           }
 
           // DELETE 
-          if (wordVector[0] == "delete") {
+          else if (wordVector[0] == "delete") {
                
                if (wordVector[1] == "from") {
 
@@ -458,7 +456,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
      }
 
      else {
-          std::cout << "Unknown Entry\n";
+          std::cout << "Unknown Command.\n";
      }
      
 
@@ -731,27 +729,28 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                     Table newTable(tableName);
                
 
-                    // go through wordVector of strings and create attributes
-                    for (int j = 0; j < wordVector.size(); j++) {
+                    
 
                          // Use to find the right strings 
-                         appended1 = wordVector[j].append(name);
-                         appended2 = wordVector[j].append(price);
+                         //appended1 = wordVector[j].append(name);
+                         //appended2 = wordVector[j].append(price);
 
+                    // go through wordVector of strings and create attributes
+                    for (int j = 0; j < wordVector.size(); j++) {
 
                          // Catch the first attribute in the parenthetical expression
                          if (wordVector[j].front() == '(') {
                          
-                              // Need to get rid of the ( at the beginning of first attribute name
-                              wordVector[j].erase(0, 1);
+                             // Need to get rid of the ( at the beginning of first attribute name
+                             wordVector[j].erase(0, 1);
 
                               // Store in attName
                               attName = wordVector[j];
 
                               // Now get attribute datatype, have to take off the , at the end
-                              oldSize = wordVector[j + 1].size();
-                              newSize = oldSize - 1;
-                              wordVector[j + 1].resize(newSize);
+                              // oldSize = wordVector[j + 1].size();
+                              // newSize = oldSize - 1;
+                              // wordVector[j + 1].resize(newSize);
 
                               // Store in attDT
                               attDT = wordVector[j + 1];
@@ -764,6 +763,8 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
 
                          }
 
+                    
+                         
                          // To capture other attributes in the expression
                          else if (wordVector[j] == "name") {
                          
@@ -771,28 +772,28 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                               attName = wordVector[j];
 
                               // Get attribute datatype, either this datatype ends with a ","
-                              if (wordVector[j + 1].back() == ',') {
+                              //if (wordVector[j + 1].back() == ',') {
                               
-                                   oldSize = wordVector[j + 1].size();
-                                   newSize = oldSize - 1;
-                                   wordVector[j + 1].resize(newSize);
+                                   // oldSize = wordVector[j + 1].size();
+                                   // newSize = oldSize - 1;
+                                   // wordVector[j + 1].resize(newSize);
 
                                    // Store in attDT
                                    attDT = wordVector[j + 1];
 
-                              }
+                             // }
 
                               // Or it ends with a ");"
-                              else {
+                              // else {
 
-                                   oldSize = wordVector[j + 1].size();
-                                   newSize = oldSize - 2;
-                                   wordVector[j + 1].resize(newSize);
+                              //      oldSize = wordVector[j + 1].size();
+                              //      newSize = oldSize - 2;
+                              //      wordVector[j + 1].resize(newSize);
 
-                                   // Store in attDT
-                                   attDT = wordVector[j + 1];
+                              //      // Store in attDT
+                              //      attDT = wordVector[j + 1];
 
-                              }
+                              // }
 
                               // Add attribute name and datatype to Attribute object
                               att2.createAttribute(attName, attDT);
@@ -808,19 +809,19 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                               attName = wordVector[j];
 
                               // Get attribute datatype, either this datatype ends with a ","
-                              if (wordVector[j + 1].back() == ',') {
+                              // if (wordVector[j + 1].back() == ',') {
                               
-                                   oldSize = wordVector[j + 1].size();
-                                   newSize = oldSize - 1;
-                                   wordVector[j + 1].resize(newSize);
+                              //      oldSize = wordVector[j + 1].size();
+                              //      newSize = oldSize - 1;
+                              //      wordVector[j + 1].resize(newSize);
 
                                    // Store in attDT
-                                   attDT = wordVector[j + 1];
+                                   //attDT = wordVector[j + 1];
 
-                              }
+                             // }
 
                               // Or it ends with a ");"
-                              else {
+                              // else {
 
                                    oldSize = wordVector[j + 1].size();
                                    newSize = oldSize - 2;
@@ -829,7 +830,7 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
                                    // Store in attDT
                                    attDT = wordVector[j + 1];
 
-                              }
+                              // }
 
                               // Add attribute name and datatype to Attribute object
                               att3.createAttribute(attName, attDT);
@@ -1030,20 +1031,18 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
                // Erase the beginning string characters off of our first attribute value
                wordVector[3].erase(0, 7);
 
-               // Now take off the , at the end
-               oldSize = wordVector[3].size();
-               newSize = oldSize - 1;
-               wordVector[3].resize(newSize);
-
                // Store in value string for readability 
                value1 = wordVector[3];
 
 
                // Now to get our second value
-               // Take off the "," at the end
-               // oldSize = wordVector[4].size();
-               // newSize = oldSize - 1;
-               // wordVector[4].resize(newSize);
+               // Take off the "'" at the end
+               oldSize = wordVector[4].size();
+               newSize = oldSize - 1;
+               wordVector[4].resize(newSize);
+
+               // Erase the "'" at the beginning
+               wordVector[4].erase(0, 1);
 
                // Store in value string for readability 
                value2 = wordVector[4];
@@ -1137,7 +1136,7 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 {
      bool used = false;
      bool inDB = false, inTable = false, valueFound = false;
-     int tableCount = 0;
+     int tableCount = 0, oldSize, newSize;
      std::string tableName, setAttName, whereAttName, newUpdate, oldValue;
 
      // Check for a database that's in use
@@ -1147,15 +1146,16 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                used = true;
 
+               // Get table name that we're inserting into
+               tableName = wordVector[1];
+
                // Search for the table we're working with 
                for (int j = 0; j < databaseVector[i].tables.size(); j++) {
 
                     if (tableName == databaseVector[i].tables[j].getTableName()) {
 
                          inDB = true;
-
-                         // Get table name that we're inserting into
-                         tableName = wordVector[1]; 
+                          
 
                          if (wordVector[2] == "set") {
 
@@ -1163,6 +1163,28 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
                               if ((databaseVector[i].tables[j].attInTable(wordVector[3])) && (databaseVector[i].tables[j].attInTable(wordVector[7]))) {
 
                                    inTable = true;
+
+                                   
+                                   // Take off the "'"s from our two values
+
+                                   // Now to get our second value
+                                   // Take off the "'" at the end
+                                   oldSize = wordVector[5].size();
+                                   newSize = oldSize - 1;
+                                   wordVector[5].resize(newSize);
+
+                                   // Erase the "'" at the beginning
+                                   wordVector[5].erase(0, 1);
+
+                                   // Now to get our second value
+                                   // Take off the "';" at the end
+                                   oldSize = wordVector[9].size();
+                                   newSize = oldSize - 2;
+                                   wordVector[9].resize(newSize);
+
+                                   // Erase the "'" at the beginning
+                                   wordVector[9].erase(0, 1);
+
                                    
                                    // heres our attribute name that we're gonna change the value of
                                    setAttName = wordVector[3];
