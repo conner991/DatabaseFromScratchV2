@@ -72,7 +72,7 @@ class Attribute {
                    
           }
 
-          bool valuesExist(std::string val) {
+          bool valuesExist(std::string val, int &valueCount) {
 
                bool valExists = false; 
 
@@ -80,11 +80,16 @@ class Attribute {
 
                     if (val == values[i]) {
                          valExists = true;
+                         valueCount++;
                     }
                }
 
                return valExists;
 
+          }
+
+          std::string getValue(int i) {
+               return values[i];
           }
 
           void getValueIndexes(std::string val, std::vector<int> &valueIndexes) {
@@ -127,6 +132,7 @@ class Attribute {
                          
                          values[i] = newValue;
                          success = true;
+                         return success;
                     }
                }
 
@@ -134,14 +140,14 @@ class Attribute {
 
           }
 
-          bool updateMultipleValues(std::string newValue, std::string oldValue, std::vector<int> &valueIndexes) {
+          bool updateMultipleValues(Attribute whereAtt, std::string newValue, std::string oldValue) {
 
                bool success = false;
 
-               for (int i = 0; i < valueIndexes.size(); i++) {
+               for (int i = 0; i < values.size(); i++) {
 
-                    if (values[valueIndexes[i]] == oldValue) {
-                         values[valueIndexes[i]] = newValue;
+                    if (whereAtt.getValue(i) == oldValue) {
+                         values[i] = newValue;
                          success = true;
                     }
                     

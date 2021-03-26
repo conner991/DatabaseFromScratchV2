@@ -1136,7 +1136,7 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 {
      bool used = false;
      bool inDB = false, inTable = false, valueFound = false;
-     int tableCount = 0, oldSize, newSize;
+     int tableCount = 0, valueCount = 0, oldSize, newSize;
      std::string tableName, setAttName, whereAttName, newUpdate, oldValue;
 
      // Check for a database that's in use
@@ -1165,26 +1165,30 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
                                    inTable = true;
 
                                    
-                                   // Take off the "'"s from our two values
+                                   // Take off the "'"s from our varchar values
+                                   if (wordVector[5] == "'gizmo'") {
+                                        // Now to get our second value
+                                        // Take off the "'" at the end
+                                        oldSize = wordVector[5].size();
+                                        newSize = oldSize - 1;
+                                        wordVector[5].resize(newSize);
 
-                                   // Now to get our second value
-                                   // Take off the "'" at the end
-                                   oldSize = wordVector[5].size();
-                                   newSize = oldSize - 1;
-                                   wordVector[5].resize(newSize);
+                                        // Erase the "'" at the beginning
+                                        wordVector[5].erase(0, 1);
+                                   }
 
-                                   // Erase the "'" at the beginning
-                                   wordVector[5].erase(0, 1);
+                                   if ((wordVector[9] == "'gizmo';") || (wordVector[9] == "'supergizmo';")) {
+                                        // Now to get our second value
+                                        // Take off the "';" at the end
+                                        oldSize = wordVector[9].size();
+                                        newSize = oldSize - 2;
+                                        wordVector[9].resize(newSize);
 
-                                   // Now to get our second value
-                                   // Take off the "';" at the end
-                                   oldSize = wordVector[9].size();
-                                   newSize = oldSize - 2;
-                                   wordVector[9].resize(newSize);
+                                        // Erase the "'" at the beginning
+                                        wordVector[9].erase(0, 1);
+                                   }
 
-                                   // Erase the "'" at the beginning
-                                   wordVector[9].erase(0, 1);
-
+                              
                                    
                                    // heres our attribute name that we're gonna change the value of
                                    setAttName = wordVector[3];
@@ -1200,16 +1204,31 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
 
                                    // If the value(s) that decide which other attributes values get updated exit 
-                                   if (databaseVector[i].tables[j].attValueExits(whereAttName, oldValue)) {
+                                   if (databaseVector[i].tables[j].attValueExits(whereAttName, oldValue, valueCount)) {
 
                                         valueFound = true;
-                                        
-                                        // Attempt to update the value(s)
-                                        if (databaseVector[i].tables[j].updateAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
 
-                                             std::cout << "1 record modified.\n";
+                                        if (valueCount == 1) {
+                                             
+                                             // Attempt to update the value(s)
+                                             if (databaseVector[i].tables[j].updateAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
 
+                                                  std::cout << "1 record modified.\n";
+
+                                             }
                                         }
+
+                                        else if (valueCount > 1) {
+
+                                             // Attempt to update the value(s)
+                                             if (databaseVector[i].tables[j].updateAttValue(whereAttName, setAttName, oldValue, newUpdate)) {
+
+                                                  std::cout << valueCount << " records modified.\n";
+
+                                             }
+                                        }
+                                        
+                                        
 
                                    }
 
@@ -1261,7 +1280,8 @@ void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 {
      bool used = false;
      bool inDB = false;
-     int tableCount = 0;
+     int tableCount = 0, valueCount = 0, oldSize, newSize;
+     std::string tableName, attName, valToDelete;
 
      // Check for a database that's in use
      for (int i = 0; i < databaseVector.size(); i++) {
@@ -1269,6 +1289,77 @@ void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &da
           if (databaseVector[i].inUse == true) {
 
                used = true;
+
+               // Get table name that we're inserting into
+               tableName = wordVector[2];
+
+               // Search for the table we're working with 
+               for (int j = 0; j < databaseVector[i].tables.size(); j++) {
+
+                    if (tableName == databaseVector[i].tables[j].getTableName()) {
+
+                         inDB = true;
+
+                         if (wordVector[3] == "where") {
+
+
+
+                              // Grab attribute catagory whcih contains the value we're trying to delete
+                              attName = wordVector[4];
+                              
+
+                              // Take off the "'"s from our varchar values
+                              if (wordVector[6] == "'gizmo'") {
+                                   
+                                   // Now to get our second value
+                                   // Take off the "'" at the end
+                                   oldSize = wordVector[6].size();
+                                   newSize = oldSize - 1;
+                                   wordVector[6].resize(newSize);
+
+                                   // Erase the "'" at the beginning
+                                   wordVector[6].erase(0, 1);
+
+                                   valToDelete = wordVector[6];
+                              }
+
+                              // Value we want to delete is not a varchar data type
+                              else {
+
+                                   // Now to get our second value
+                                   // Take off the ";" at the end
+                                   oldSize = wordVector[6].size();
+                                   newSize = oldSize - 1;
+                                   wordVector[6].resize(newSize);
+
+                                   valToDelete = wordVector[6];
+                              }
+                              
+
+                              // If the value that we're trying to delete exits
+                              if (databaseVector[i].tables[j].attValueExits(attName, valToDelete, valueCount)) {
+
+                                   
+
+                              }
+               
+                         }
+
+                         else {
+                              std::cout << "WHERE must follow table name.\n";
+                         }
+
+               
+                    }
+
+
+               }
+
+               if (!inDB) {
+                    std::cout << "Table not found.\n";
+               }
+               
+               
 
                
           }

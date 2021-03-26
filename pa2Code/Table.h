@@ -147,7 +147,7 @@ class Table : public Attribute {
 
           }
 
-          bool attValueExits(std::string attName, std::string val) {
+          bool attValueExits(std::string attName, std::string val, int &valueCount) {
 
                bool inAtt = false;
 
@@ -159,9 +159,13 @@ class Table : public Attribute {
                          
                          // search for specific value within the attribute object
                          for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
+                              
+                              if (inAtt) {
+                                   return inAtt; 
+                              }
 
                               // If the value is there
-                              if (attributes[i].valuesExist(val)) {
+                              if (attributes[i].valuesExist(val, valueCount)) {
                                    
                                    inAtt = true;
                               }
@@ -209,7 +213,7 @@ class Table : public Attribute {
                          if (attributes[i].getName() == whereAttName) {
                          
                               // find our "where" attribute number
-                              int where = i;
+                              where = i;
                          
                          }
 
@@ -217,22 +221,28 @@ class Table : public Attribute {
                          if (attributes[i].getName() == setAttName) {
                          
                               // find our "set" attribute number
-                              int set = i;
+                              set = i;
                          
                          }
 
                     }
 
-                    // go into the where attribute and figure out which values are getting counted
+                    // go into the where attribute and figure out which values are getting counted and updated 
                     attributes[where].getValueIndexes(oldValue, valueIndexes);
 
                     // Noe go into the set attribute and set the indexes values to the new value
-                    success = attributes[set].updateMultipleValues(newValue, oldValue, valueIndexes);
+                    success = attributes[set].updateMultipleValues(attributes[where], newValue, oldValue);
 
 
                }
 
                return success;
+
+          }
+
+          bool deleteValue(std::string attName, std::string valToDelete) {
+
+               
 
           }
 
