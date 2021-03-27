@@ -100,7 +100,7 @@ class Attribute {
 
           }
 
-          void displayValue(int &i){
+          void displayValue(int i){
 
                std::cout << values[i] << " | ";
                    

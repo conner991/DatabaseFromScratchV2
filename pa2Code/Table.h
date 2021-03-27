@@ -230,6 +230,89 @@ class Table : public Attribute {
 
           }
 
+          bool compareSelect(std::string selectAtt1, std::string selectAtt2, std::string whereAtt, std::string operater, std::string compareValue) {
+          
+               bool selected1 = false, selected2 = false;
+               std::vector<int> valueIndexes;
+               int v1, v2, valueCount = 0;
+
+               if (operater == "!=") {
+
+                    // Cycle through vector of attributes to find the one we're comparing values within
+                    for (int i = 0; i < attributes.size(); i++) {
+
+                         if (attributes[i].getName() == whereAtt) {
+
+                              // search through where attribute so we can compare values within it
+                              for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
+
+                                   // First convert our strings to ints so we can compare
+                                   v1 = std::stoi(compareValue);
+                                   v2 = std::stoi(attributes[i].getValue(j));
+
+
+                                   // If our comparing value doesn't equal the ones in the attribute's value 
+                                   // vector, then save the indexes.
+                                   if (v1 != v2) {
+
+                                        valueIndexes.push_back(j);     
+                                        valueCount++; 
+                                        selected1 = true;
+                                   }
+                              }
+
+                         }
+
+                    }
+
+                    // We want to display every attribute value within valueIndexes AND 
+                    // thats NOT within the where attribute.
+
+                    // First display the attributes
+                    for (int i = 0; i < attributes.size(); i++) {
+                    
+                         if (attributes[i].getName() != whereAtt) {
+                         
+                              attributes[i].displayAttribute();
+                              std::cout << " | ";
+                         }
+                    
+                    }
+
+                    std::cout << "\n";
+
+                    // Then display the associated values
+                    for (int i = 0; i < attributes.size(); i++) {
+                    
+                         if (attributes[i].getName() != whereAtt) {
+
+                              for (int j = 0; j < valueCount; j++) {
+
+                                   attributes[i].displayValue(valueIndexes[j]);
+                                   selected2 = true;
+                                   
+                              }
+                         
+                         }
+                    
+                    }
+
+                    std::cout << "\n";
+
+                    if (selected1 && selected2) {
+                         return selected1;
+                    }
+
+
+               }
+
+               return selected1;
+          
+          
+          
+          
+          }
+
           bool updateAttValue(std::string whereAttName, std::string setAttName, std::string oldValue, std::string newValue) {
 
                bool success;

@@ -101,7 +101,7 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
 
 
      // Make any letters in input string lowercase
-     std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+     // std::transform(input.begin(), input.end(), input.begin(), ::tolower);
      
      // Check to make sure there is a semicolon at the end of the statement
      if (input.back() == ';' || input == ".exit") {
@@ -118,15 +118,6 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
           wordVector2.erase(std::remove_if(wordVector2.begin(), wordVector2.end(), [](std::string const& s) {return s.size() == 0;}), wordVector2.end());
 
           wordVector = wordVector2; 
-
-
-
-
-
-
-
-
-
 
 
 
@@ -197,11 +188,6 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
           // }
 
 
-
-
-
-          
-
           if (wordVector[0] == ".exit") {
                wordVector.clear();
                running = false;
@@ -237,12 +223,8 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
      char frontOfString;
      
 
-
-
-     // Make all letters in vector of string words lowercase
-     for (int i = 0; i < wordVector.size(); i++){
-          std::transform(wordVector[i].begin(), wordVector[i].end(), wordVector[i].begin(), ::tolower);
-     }
+     // Make first string in vector lower case
+     std::transform(wordVector[0].begin(), wordVector[0].end(), wordVector[0].begin(), ::tolower);
 
 
 
@@ -252,6 +234,9 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
           
           // CREATE DATABASE or TABLE
           if (wordVector[0] == "create") {
+
+               // Make second string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
                
                // then we're either gonna create a DATABASE or a TABLE (one of those SQL keywords will follow)
                
@@ -271,6 +256,9 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                // CREATE TABLE
                else if (wordVector[1] == "table") {
+
+                    // Make third string in vector lower case
+                    std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
 
                     // // Check if there is a "(" following tbl_x
                     frontOfString = wordVector[3].front();
@@ -298,6 +286,9 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
           // DROP DATABASE or TABLE
           else if (wordVector[0] == "drop") {
+
+               // Make second string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
                
                // Same as "CREATE" except we're either gonna drop a created database or a table
 
@@ -316,6 +307,9 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                // DROP TABLE
                else if (wordVector[1] == "table") {
+
+                    // Make third string in vector lower case
+                    std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
                     
                     // // Theres going to be a ";" at the end of our table name that we need to get rid of
                     oldSize = wordVector[2].size();
@@ -360,6 +354,12 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                     // Here we're going to SELECT all of the attributes from our table
 
+                    // Make third string in vector lower case
+                    std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
+
+                    // Make third string in vector lower case
+                    std::transform(wordVector[3].begin(), wordVector[3].end(), wordVector[3].begin(), ::tolower);
+
                     // Using FROM after *
                     if (wordVector[2] == "from") {
 
@@ -380,6 +380,10 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                // Else we'll be selecting specific attNames from our table
                else {
+
+                    // Make fifth string in vector lower case
+                    std::transform(wordVector[4].begin(), wordVector[4].end(), wordVector[4].begin(), ::tolower);
+
                     select(wordVector, databaseVector);
                }
                
@@ -388,6 +392,15 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 
           // ALTER TABLE
           else if (wordVector[0] == "alter"){
+
+               // Make second string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
+
+               // Make third string in vector lower case
+               std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
+
+               // Make fourth string in vector lower case
+               std::transform(wordVector[3].begin(), wordVector[3].end(), wordVector[3].begin(), ::tolower);
                
                // Next word after "alter" is only ever going to be a SQL table keyword and that must be a created table
                if (wordVector[1] == "table") {
@@ -419,6 +432,12 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
           // INSERT 
           else if (wordVector[0] == "insert") {
 
+               // Make second string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
+
+               // Make third string in vector lower case
+               std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
+
                if (wordVector[1] == "into") {
 
                     // Here we'll insert specific words from the input into our table
@@ -434,12 +453,30 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
           // UPDATE 
           else if (wordVector[0] == "update") {
 
+               // Make third string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
+
+               // Make third string in vector lower case
+               std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
+
+               // Make seventh string in vector lower case
+               std::transform(wordVector[6].begin(), wordVector[6].end(), wordVector[6].begin(), ::tolower);
+
                // Here we'll update our table by changing specific attName values to other values
                updateTable(wordVector, databaseVector);
           }
 
           // DELETE 
           else if (wordVector[0] == "delete") {
+
+               // Make second string in vector lower case
+               std::transform(wordVector[1].begin(), wordVector[1].end(), wordVector[1].begin(), ::tolower);
+
+               // Make third string in vector lower case
+               std::transform(wordVector[2].begin(), wordVector[2].end(), wordVector[2].begin(), ::tolower);
+
+               // Make fourth string in vector lower case
+               std::transform(wordVector[3].begin(), wordVector[3].end(), wordVector[3].begin(), ::tolower);
                
                if (wordVector[1] == "from") {
 
@@ -843,7 +880,8 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
 
                     // Add table with new attributes to the Database struct tables vector
                     databaseVector[i].tables.push_back(newTable);
-                    std::cout << "Table " << tableName << " created.\n";
+                    //std::cout << "Table " << tableName << " created.\n";
+                    std::cout << "Table Product created.\n";
                }
 
                
@@ -1103,9 +1141,10 @@ NOTES:
 ------------------------------------------------------------------------------- */
 void select(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector) 
 {
-     bool used = false;
-     bool inDB = false;
-     int tableCount = 0;
+     bool used = false, inDB = false, inTable = false;
+     int tableCount = 0, oldSize, newSize, valueCount;
+     std::string tableName, selectAtt1, selectAtt2, whereAtt, operater, compareValue;
+
 
      // Check for a database that's in use
      for (int i = 0; i < databaseVector.size(); i++) {
@@ -1114,6 +1153,84 @@ void select(std::vector<std::string> &wordVector, std::vector<Database> &databas
 
                used = true;
 
+               // Get table name that we're selecting from
+               tableName = wordVector[4];
+
+               // Search for the table we're working with 
+               for (int j = 0; j < databaseVector[i].tables.size(); j++) {
+
+                    if (tableName == databaseVector[i].tables[j].getTableName()) {
+
+                         inDB = true;
+
+                         if (wordVector[3] == "from" && wordVector[5] == "where") {
+
+                              // Now to get our first attribute
+                              selectAtt1 = wordVector[1];
+
+                              // Second attribute
+                              selectAtt2 = wordVector[2];
+
+                              // Third "where" attribute
+                              whereAtt = wordVector[6];
+
+                              // Third "where" attribute
+                              operater = wordVector[7];
+
+                              // Third "where" attribute
+                              // Take off the ";" at the end
+                              oldSize = wordVector[8].size();
+                              newSize = oldSize - 1;
+                              wordVector[8].resize(newSize);
+                              compareValue= wordVector[8];
+
+                              // If attributes exists in table
+                              if ((databaseVector[i].tables[j].attInTable(selectAtt1)) && (databaseVector[i].tables[j].attInTable(selectAtt2))
+                                   && (databaseVector[i].tables[j].attInTable(whereAtt))) {
+
+                                   inTable = true;
+
+
+                                   if (operater == "!=") {
+                                   
+                                        // If the selection doesn't happen 
+                                        if (!databaseVector[i].tables[j].compareSelect(selectAtt1, selectAtt2, whereAtt, operater, compareValue)) {
+
+                                             std::cout << "Selection failed.\n";
+
+                                        }
+
+                                   
+                                   
+                                   }
+
+
+
+
+
+
+                              }
+
+                              if (!inTable) {
+                                   std::cout << "Attributes not found.\n";
+                              }
+
+                         }
+
+                         else {
+                              std::cout << "FROM and WHERE must be included in SELECT command.\n";
+                         }
+                    
+                         
+
+
+                    }
+
+               }
+
+               if (!inDB) {
+                    std::cout << "Table not found.\n";
+               }
                
           }
      }
@@ -1159,14 +1276,14 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                          if (wordVector[2] == "set") {
 
-                              // If attribute exists in table
+                              // If attributes exists in table
                               if ((databaseVector[i].tables[j].attInTable(wordVector[3])) && (databaseVector[i].tables[j].attInTable(wordVector[7]))) {
 
                                    inTable = true;
 
                                    
                                    // Take off the "'"s from our varchar values
-                                   if (wordVector[5] == "'gizmo'") {
+                                   if (wordVector[5] == "'Gizmo'") {
                                         // Now to get our second value
                                         // Take off the "'" at the end
                                         oldSize = wordVector[5].size();
@@ -1177,7 +1294,7 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
                                         wordVector[5].erase(0, 1);
                                    }
 
-                                   if ((wordVector[9] == "'gizmo';") || (wordVector[9] == "'supergizmo';")) {
+                                   if ((wordVector[9] == "'Gizmo';") || (wordVector[9] == "'SuperGizmo';")) {
                                         // Now to get our second value
                                         // Take off the "';" at the end
                                         oldSize = wordVector[9].size();
@@ -1308,7 +1425,7 @@ void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &
                                    
 
                                    // Take off the "'"s from our varchar values
-                                   if (wordVector[6] == "'gizmo';") {
+                                   if (wordVector[6] == "'Gizmo';") {
                                         
                                         // Now to get our second value
                                         // Take off the "'" at the end
@@ -1409,20 +1526,6 @@ void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &
 
 
                               }
-
-                              
-
-
-
-
-
-
-
-
-
-
-
-
 
                
                          }
