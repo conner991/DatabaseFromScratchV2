@@ -180,6 +180,56 @@ class Table : public Attribute {
 
           }
 
+          bool compareDelete(std::string attName, std::string value, std::string operater, int &valueCount) {
+
+               bool comparable = false;
+               std::vector<int> valueIndexes;
+               float fValue1, fValue2;
+
+               if (operater == ">") {
+
+                    // Cycle through vector of attributes to find the one we're comparing values within
+                    for (int i = 0; i < attributes.size(); i++) {
+
+                         if (attributes[i].getName() == attName) {
+                         
+                              // search for specific value within the attribute object
+                              for (int j = 0; j < attributes[i].getNumOfValues(); j++) {
+
+                                   // First convert our strings to floats so we can compare
+                                   fValue1 = std::stof(value);
+
+                                   fValue2 = std::stof(attributes[i].getValue(j));
+
+
+                                   // If our comparing value is less than the ones in the attributes value 
+                                   // vector, then save the indexes.
+                                   if (fValue1 < fValue2) {
+
+                                        valueIndexes.push_back(j);     
+                                        valueCount++; 
+                                        comparable = true;
+                                   }
+                              }
+
+                              // Go through every attribute and delete every value at their respective indexes
+                              for (int i = 0; i < attributes.size(); i++) {
+
+                                   comparable = attributes[i].deleteValue(valueIndexes);                    
+
+                              }
+
+                         
+                         }
+
+                    }
+
+               }
+
+               return comparable;
+
+          }
+
           bool updateAttValue(std::string whereAttName, std::string setAttName, std::string oldValue, std::string newValue) {
 
                bool success;
@@ -240,9 +290,31 @@ class Table : public Attribute {
 
           }
 
-          bool deleteValue(std::string attName, std::string valToDelete) {
+          bool deleteValues(std::string attName, std::string valToDelete) {
 
-               
+               bool deleted = false;
+               std::vector<int> valueIndexes;
+
+               // Search for attribute that contains the value we want to delete 
+               for (int i = 0; i < attributes.size(); i++) {
+
+                    if (attributes[i].getName() == attName) {
+
+                         // Figure out the indexes of where it's located in the attribute values vector
+                         attributes[i].getValueIndexes(valToDelete, valueIndexes);
+
+                    }
+
+               }
+
+               // Go through every attribute and delete every value at their respective indexes
+               for (int i = 0; i < attributes.size(); i++) {
+
+                    deleted = attributes[i].deleteValue(valueIndexes);                    
+
+               }
+
+               return deleted;
 
           }
 

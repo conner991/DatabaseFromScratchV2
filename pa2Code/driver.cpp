@@ -41,7 +41,7 @@ void addAttribute(std::string table, std::string attName, std::string dt, std::v
 void insert(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 void select(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
-void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
+void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 /* -----------------------------------------------------------------------------
 FUNCTION:          
 DESCRIPTION:       
@@ -444,7 +444,7 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
                if (wordVector[1] == "from") {
 
                     // Here we'll delete specific attName values from our table
-                    deleteTable(wordVector, databaseVector);
+                    deleteRecords(wordVector, databaseVector);
                }
 
                else {
@@ -1276,12 +1276,11 @@ DESCRIPTION:
 RETURNS:           
 NOTES:             
 ------------------------------------------------------------------------------- */
-void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
+void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
 {
-     bool used = false;
-     bool inDB = false;
+     bool used = false, inDB = false, valueFound = false;
      int tableCount = 0, valueCount = 0, oldSize, newSize;
-     std::string tableName, attName, valToDelete;
+     std::string tableName, attName, valToDelete, operater;
 
      // Check for a database that's in use
      for (int i = 0; i < databaseVector.size(); i++) {
@@ -1302,46 +1301,129 @@ void deleteTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 
                          if (wordVector[3] == "where") {
 
+                              if (wordVector[5] == "=") {
 
-
-                              // Grab attribute catagory whcih contains the value we're trying to delete
-                              attName = wordVector[4];
-                              
-
-                              // Take off the "'"s from our varchar values
-                              if (wordVector[6] == "'gizmo'") {
+                                   // Grab attribute catagory whcih contains the value we're trying to delete
+                                   attName = wordVector[4];
                                    
-                                   // Now to get our second value
-                                   // Take off the "'" at the end
-                                   oldSize = wordVector[6].size();
-                                   newSize = oldSize - 1;
-                                   wordVector[6].resize(newSize);
 
-                                   // Erase the "'" at the beginning
-                                   wordVector[6].erase(0, 1);
+                                   // Take off the "'"s from our varchar values
+                                   if (wordVector[6] == "'gizmo';") {
+                                        
+                                        // Now to get our second value
+                                        // Take off the "'" at the end
+                                        oldSize = wordVector[6].size();
+                                        newSize = oldSize - 2;
+                                        wordVector[6].resize(newSize);
 
-                                   valToDelete = wordVector[6];
+                                        // Erase the "'" at the beginning
+                                        wordVector[6].erase(0, 1);
+
+                                        valToDelete = wordVector[6];
+                                   }
+
+                                   // Value we want to delete is not a varchar data type
+                                   else {
+
+                                        // Now to get our value
+                                        // Take off the ";" at the end
+                                        oldSize = wordVector[6].size();
+                                        newSize = oldSize - 1;
+                                        wordVector[6].resize(newSize);
+
+                                        valToDelete = wordVector[6];
+                                   }
+                                   
+
+                                   // If the value that we're trying to delete exits
+                                   if (databaseVector[i].tables[j].attValueExits(attName, valToDelete, valueCount)) {
+
+                                        valueFound = true;
+
+                                        if (valueCount == 1) {
+
+                                             if (databaseVector[i].tables[j].deleteValues(attName, valToDelete)) {
+                                                  
+                                                  std::cout << valueCount << " record deleted.\n";
+                                             }
+                                             
+                                        }
+
+                                        else if (valueCount > 1) {
+
+                                             if (databaseVector[i].tables[j].deleteValues(attName, valToDelete)) {
+                                                  
+                                                  std::cout << valueCount << " records deleted.\n";
+                                             }
+
+                                        }
+
+                                   }
+
+                                   if (!valueFound) {
+                                        std::cout << "Where value not found.\n";
+                                   }
+
                               }
 
-                              // Value we want to delete is not a varchar data type
-                              else {
 
-                                   // Now to get our second value
+                              else if (wordVector[5] == ">") {
+                                   
+                                   // Grab attribute catagory which contains the value we're trying to delete
+                                   attName = wordVector[4];
+
+                                   // Now to get our value
                                    // Take off the ";" at the end
                                    oldSize = wordVector[6].size();
                                    newSize = oldSize - 1;
                                    wordVector[6].resize(newSize);
 
+                                   // Grab string that contains the value that we're comparing the other values to
                                    valToDelete = wordVector[6];
+
+                                   // Grab the operator string 
+                                   operater = wordVector[5];
+
+                                   // If the value that we're trying to delete exits
+                                   if (databaseVector[i].tables[j].compareDelete(attName, valToDelete, operater, valueCount)) {
+
+                                        valueFound = true;
+
+                                        if (valueCount == 1) {
+
+                                             std::cout << valueCount << " record deleted.\n";
+                                             
+                                        }
+
+                                        else if (valueCount > 1) {
+
+                                             std::cout << valueCount << " records deleted.\n";
+
+                                        }
+
+                                   }
+
+                                   if (!valueFound) {
+                                        std::cout << "Where value not found.\n";
+                                   }
+
+
                               }
+
                               
 
-                              // If the value that we're trying to delete exits
-                              if (databaseVector[i].tables[j].attValueExits(attName, valToDelete, valueCount)) {
 
-                                   
 
-                              }
+
+
+
+
+
+
+
+
+
+
                
                          }
 

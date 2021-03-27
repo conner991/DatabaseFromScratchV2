@@ -23,6 +23,7 @@ Conner Fissell     **-**-2020         1.0  Original version
 #include <cstdlib>
 #include <vector>
 #include <regex>
+#include <iterator>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -64,6 +65,39 @@ class Attribute {
 
           void addValue(std::string val) {
                values.push_back(val);
+          }
+
+          bool deleteValue(std::vector<int> &valueIndexes) {
+
+               bool deleted = false;
+               int count = 0;
+               std::string tempValue;
+               
+               
+               // std::vector<std::string>::iterator it1 = values.begin();
+               // std::vector<std::string>::iterator it2 = values.begin();
+
+               // values.erase(values.begin());
+               // values.erase(values.begin() + 3);
+
+               // deleted = true;
+
+               //auto nextIT = next(it1, valueIndexes[i]);
+
+               // advance(it1,valueIndexes[i]);
+
+               // values.erase(it1);
+
+
+               for (int i = 0; i < valueIndexes.size(); i++) {
+
+                    values.erase(values.begin() + valueIndexes[i]);
+                    deleted = true;
+
+               }
+
+               return deleted;
+
           }
 
           void displayValue(int &i){
