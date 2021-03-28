@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
-FILE NAME:         
-DESCRIPTION:       
+FILE NAME:         driver.cpp
+DESCRIPTION:       Driver file that contains main() and controls the whole program
 USAGE:             
 COMPILER:          GNU g++ compiler on Linux
 NOTES:             
@@ -8,25 +8,21 @@ NOTES:
 MODIFICATION HISTORY:
 Author             Date               Version
 ---------------    ----------         --------------
-Conner Fissell     02-21-2021         1.0  Original version
+Conner Fissell     03-28-2021         Final Version for Project 2
 ----------------------------------------------------------------------------- */
 #include "Table.h"
-
-
 
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define ARRAY_SIZE(a) sizeof(a) / sizeof(a[0])
 
 
-// structs
+// Database struct that holds the Table ojects and other database info
 struct Database
 {
      bool inUse = false;
      std::string dbName;
      std::vector<Table> tables;
 };
-
-
 
 // Prototypes
 bool inputParser(std::string inputLine, std::vector<std::string> &wordVector, bool &running);
@@ -43,15 +39,13 @@ void select(std::vector<std::string> &wordVector, std::vector<Database> &databas
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector);
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          main() 
+DESCRIPTION:       Controls the flow of the program at the highest level
+RETURNS:           Nothing
 NOTES:             
 ------------------------------------------------------------------------------- */
 int main(int argc, char* argv[])
 {
-
-     std::fstream file;
 
 
      bool running = true; 
@@ -89,9 +83,9 @@ int main(int argc, char* argv[])
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          inputParser() 
+DESCRIPTION:       Parses the input the user enters into the command prompt
+RETURNS:           bool running
 NOTES:             
 ------------------------------------------------------------------------------- */
 bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &running)
@@ -212,9 +206,10 @@ bool inputParser(std::string input, std::vector<std::string> &wordVector, bool &
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          WordDecider() 
+DESCRIPTION:       Decides based on the parsed user input where the program should
+                    go next.
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector, int &dbCount) 
@@ -500,9 +495,9 @@ void wordDecider(std::vector<std::string> &wordVector, std::vector<Database> &da
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          createDB() 
+DESCRIPTION:       creates a database object and adds it to the databaseVector
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void createDB(std::string name, std::vector<Database> &databaseVector, int &dbCount) 
@@ -522,20 +517,19 @@ void createDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
           }
 
           if (!inVector) { 
+
                // Now create a database with name by creating a directory in our project
-               const char* dbName = name.c_str();
+               // const char* dbName = name.c_str();
                     
-               if (mkdir(dbName, 0777) == -1) {
-                    std::cout << "Error creating Database.\n";
-               }
+               // if (mkdir(dbName, 0777) == -1) {
+               //      std::cout << "Error creating Database.\n";
+               // }
 
-               else {
-
-                    // Add name of database to vector
-                    db.dbName = name;
-                    databaseVector.push_back(db);
-                    std::cout << "Database " << name << " created.\n";
-               }
+               // Add name of database to vector
+               db.dbName = name;
+               databaseVector.push_back(db);
+               std::cout << "Database " << name << " created.\n";
+          
 
                dbCount++;
           }
@@ -551,19 +545,18 @@ void createDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
           else {
 
                // Now create a database with name by creating a directory in our project
-               const char* dbName = name.c_str();
+               // const char* dbName = name.c_str();
                     
-               if (mkdir(dbName, 0777) == -1) {
-                    std::cout << "Error creating Database\n";
-               }
+               // if (mkdir(dbName, 0777) == -1) {
+               //      std::cout << "Error creating Database\n";
+               // }
 
-               else {
-
-                    // Add name of database to vector
-                    db.dbName = name;
-                    databaseVector.push_back(db);
-                    std::cout << "Database " << name << " created.\n";
-               }
+          
+               // Add name of database to vector
+               db.dbName = name;
+               databaseVector.push_back(db);
+               std::cout << "Database " << name << " created.\n";
+               
 
                dbCount++;
           }
@@ -572,19 +565,17 @@ void createDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
      // Our database vector is empty 
      else {
           // Now create a database with name by creating a directory in our project
-          const char* dbName = name.c_str();
+          // const char* dbName = name.c_str();
                     
-          if (mkdir(dbName, 0777) == -1) {
-               std::cout << "Error creating Database\n";
-          }
+          // if (mkdir(dbName, 0777) == -1) {
+          //      std::cout << "Error creating Database\n";
+          // }
 
-          else {
-
-               // Add name of database to vector
-               db.dbName = name;
-               databaseVector.push_back(db);
-               std::cout << "Database " << name << " created.\n";
-          }
+          // Add name of database to vector
+          db.dbName = name;
+          databaseVector.push_back(db);
+          std::cout << "Database " << name << " created.\n";
+          
 
           dbCount++;
      }
@@ -593,9 +584,9 @@ void createDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          deleteDB() 
+DESCRIPTION:       deletes a database from the database vector
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void deleteDB(std::string name, std::vector<Database> &databaseVector, int &dbCount) 
@@ -620,9 +611,9 @@ void deleteDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
                     databaseVector.erase(i);
 
                     // Delete database directory from project directory
-                    std::string removalString = "rm -r " + tempName1;
-                    system(removalString.c_str());
-                    std::cout << "Database " << tempName1 << " deleted.\n";
+                    // std::string removalString = "rm -r " + tempName1;
+                    // system(removalString.c_str());
+                    // std::cout << "Database " << tempName1 << " deleted.\n";
 
                     dbCount--;     
 
@@ -641,9 +632,11 @@ void deleteDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
                
                // Delete database directory from project directory
                databaseVector.clear();
-               std::string removalString = "rm -r " + name;
-               system(removalString.c_str());
-               std::cout << "Database " << name << " deleted.\n";
+
+
+               // std::string removalString = "rm -r " + name;
+               // system(removalString.c_str());
+               // std::cout << "Database " << name << " deleted.\n";
 
                dbCount--;
           }
@@ -663,9 +656,9 @@ void deleteDB(std::string name, std::vector<Database> &databaseVector, int &dbCo
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          useDB() 
+DESCRIPTION:       Activates a database oject to be used
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void useDB(std::string name, std::vector<Database> &databaseVector, int &dbCount) 
@@ -729,9 +722,10 @@ void useDB(std::string name, std::vector<Database> &databaseVector, int &dbCount
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          createTable() 
+DESCRIPTION:       creates a Table object and adds it to the tables vector within 
+                    a database struct object
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void createTable(std::string tableName, std::vector<std::string> &wordVector, std::vector<Database> &databaseVector) 
@@ -898,9 +892,9 @@ void createTable(std::string tableName, std::vector<std::string> &wordVector, st
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          dropTable()
+DESCRIPTION:       deletes a table object from the database ojects Table vector
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void dropTable(std::string tableName, std::vector<Database> &databaseVector) 
@@ -951,9 +945,9 @@ void dropTable(std::string tableName, std::vector<Database> &databaseVector)
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          displayWholeTable()
+DESCRIPTION:       prints out all of the table data to the screen
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void displayWholeTable(std::string tableName, std::vector<Database> &databaseVector)
@@ -995,9 +989,9 @@ void displayWholeTable(std::string tableName, std::vector<Database> &databaseVec
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          addAttribute()
+DESCRIPTION:       allows the user to add an attribute to the table in use
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void addAttribute(std::string tableName, std::string attName, std::string attDT, std::vector<Database> &databaseVector) 
@@ -1043,8 +1037,9 @@ void addAttribute(std::string tableName, std::string attName, std::string attDT,
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
+FUNCTION:          insert()
+DESCRIPTION:       inserts attribute values into the table object which in turn inserts
+                    the data into the appropriate Attribute objects. 
 RETURNS:           
 NOTES:             
 ------------------------------------------------------------------------------- */
@@ -1134,9 +1129,9 @@ void insert(std::vector<std::string> &wordVector, std::vector<Database> &databas
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          select()
+DESCRIPTION:       grabs specific data from the table and prints it out to the screen
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void select(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector) 
@@ -1244,9 +1239,9 @@ void select(std::vector<std::string> &wordVector, std::vector<Database> &databas
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          updateTable()
+DESCRIPTION:       allows the user to change certain data values within the table
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)
@@ -1388,9 +1383,9 @@ void updateTable(std::vector<std::string> &wordVector, std::vector<Database> &da
 }
 
 /* -----------------------------------------------------------------------------
-FUNCTION:          
-DESCRIPTION:       
-RETURNS:           
+FUNCTION:          deleteRecords()
+DESCRIPTION:       removes specific data values from the table 
+RETURNS:           void
 NOTES:             
 ------------------------------------------------------------------------------- */
 void deleteRecords(std::vector<std::string> &wordVector, std::vector<Database> &databaseVector)

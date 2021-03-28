@@ -1,35 +1,19 @@
-# Design Document - Conner Fissell: Project 1
+# Design Document - Conner Fissell: Project 2
 
 ## Status
-Unfortunately I was not able to complete Project 1 in time to get all of the proper functionalites working correctly. 
-I do however have a plan to finish this up after I submit it for partial credit. I think I know how to implement the rest of the
-project using a couple classes and a struct. I was able to come up with a protoype design but did not have time to integrate it properly 
-with the rest of the program. I want to get this first assignment working because I know the rest will build off of this one and I 
-think I can make that happen. Just going to have to put more time into it of course. Apologies for the tardiness and incompleteness 
-of the project. Next time will hopefully be better!
+Project 2 is fully complete and runs as it should with all of the required functionalities. 
 
-## System Design
-I decided to model the system design of the project after the example from the video and the paper guide. Whenever a database 
-gets created I have my program create an empty directory titled after the name the user wants to call the database. My plan is to have
-tables be files that get created inside of the database directories. 
+## System Design and Implementation
+I have changed my system design model from the first project. Instead of using the databases as directories and tables as files approach, I designed Project 2 to use one struct, two classes, objects and vectors to store the physical data. The process of storage starts with the databases. When the user enters the SQL command CREATE DATABASE, a Database struct object gets created and added to a vector of Database objects called "databaseVector." This vector is used to manage the different databases that could be created in one session. Each Database struct object contains three variable members: a bool called "inUse," a string called "dbName," and a vector called "tables" that holds Table objects (Table is one of the two classes). The bool is used as a flag to mark when a database object is being used so that only one database can be in use at the same time.
 
-## Implementation
-I decided to write the program using C++ with one driver file containing main(), two header files and a Makefile. The only functionalities 
-that I was able to get working are database creation and deletion ones; plus the USE command. I designed the program so the it first reads in
-the input from the SQL prompt as a string. The parser then takes that string and splits it up into dynamic words that later get analyzed by the 
-"wordDecider()" function. Here is where the rest of the program flows from depending on what is entered into the prompt. I made three functions
-titled "createDB()", "deleteDB()" and "useDB()" that handle database creation, deletion and usage. I use a "struct" titled "Database" to store 
-relavant information pertaining to a database and a vector to hold the created struct databases. The createDB() and deleteDB() functions use logic,
-a counter a boolean flag to manipulate the database vector according to the users input.  
+When the user starts using a specific database and wants to add a table to that database, a table object gets created and added to the Database objects Table vector member. Each table object has three main private member variables: "tableName" (string), "numOfAttributes" (int), and a vector called "attributes" that holds Attribute objects (Attribute is the other base class). When the user creates a table and defines what they want the attributes within that table to be ( i.e name, data type), that information gets housed within an Attribute object and then inserted into the attributes vector within the respective table object. The Attributes class has four main private member variables: "attributeName" (string), "attributeType" (string), "numOfValues" (int), and a vector called "values" that holds string objects. These strings are each attributes respective values that get inserted into the table by the user. 
 
-## Interface
-The interface of the program runs exactly how the example program from the TA test video ran. This design was also modeled after the 
-terminal interface design that is on the paper guide. Running "make dbDriver" compiles the program. Then entering "./dbDriver" into the 
-command prompt will launch the program into "SQL Mode." A "-->" symbol pops up letting the user know that the program is now ready to accept
-SQL commands. 
+The Table class inherits the Attribute class and the driver file (main) uses both classes to implement the required functionalites of the project. When the user wants to run a query on the table, say "select name, price from product where pid != 2;," the driver parses the input string, separates all of the words out by spaces, takes the commas out too, and puts each string word into a vector of strings called "wordVector." The wordDecider function within the driver then passes around the wordVector and databaseVector and sends them to the appropriate functions depending on what input the user entered into the prompt. 
+ 
+So when the SQL command: "select name, price from product where pid != 2;" is entered, wordDecider sends databaseVector and wordVector to the select() function to be analyzed further. Here (and this is the case for the other query functions), we check to make sure that a database is actually in use and then we test that the user entered the correct table name. After that the function then pulls 5 of the strings out of wordVector and places them into their own uniquely named strings called: "selectAtt1", "selectAtt2", "whereAtt", "operator", and "compareValue." The attribute names then get tested by a Table memeber function called "attInTable" to make sure that they exist. If that passes, then all five strings are passed into another Table member function called "compareSelect" where we check which type of mathematical compare operator we are dealing with. For the "!=" operation, the function runs through a series of for loops that checks for the "where" attribute and compares values within it to see which ones aren't equal to 2. It figures out the index values of those not equal to values and places them in a int vector called "valueIndexes." The function then continues on with three more for loops that call on Attribute member functions to compare the names of the attribute objects, display attribute information and to display specific attribute values depending on how the "!=" comparison went. 
 
-## Testing
-This program was created using VS Code on Ubuntu 20.10. No external libraries, that needed to be downloaded and installed locally were used.
-As I am wrting this now I realize that I did not implement this program as one which could accept the PA1_test.sql script on the command line. The 
-SQL commands will have to be entered manually. I totally forgot about that idea and apologize Abdullah! That would definitely be the best way to write 
-this program. I will work on implementing that idea for next time. 
+The compareSelect() function and the other query functions all return a boolean. These booleans determine whether or not certain cout statements get printed to the screen. The cout statements are mainly for error detection. The other query functions also run in a similar manner to the compareSelect() function when it comes to the control flow of the driver and how the Table and Attribute class member functions handle the input strings. 
+ 
+
+## Interface, Testing, Compile and Execution
+The pa2Code directory contains a .cpp driver file called "driver," two .h class files called "Table" and "Attribute," and a makefile called "Makefile." The interface of the program runs exactly how the example program from the TA test video ran. This design was also modeled after the terminal interface design that is on the paper guide. Running "make driver" compiles the program. Then entering "./driver" into the command prompt will launch the program into "SQL Mode." A "-->" symbol pops up letting the user know that the program is now ready to accept SQL commands. This program was created using VS Code on Ubuntu 20.10. No external libraries that need to be downloaded and installed locally were used. 

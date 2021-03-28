@@ -1,14 +1,16 @@
 /* -----------------------------------------------------------------------------
-FILE NAME:         
-DESCRIPTION:        
+FILE NAME:         Attribute.h
+DESCRIPTION:       Class file that holds the base class "Attribute"
 USAGE:             
 COMPILER:          GNU g++ compiler on Linux
-NOTES:             
+NOTES:             This class holds all of the relevant information pertaining to 
+                    an attribute within a table (name, data type, values). Allows for
+                    manipulation and accessing of that data.
 
 MODIFICATION HISTORY:
 Author             Date               Version
 ---------------    ----------         --------------
-Conner Fissell     **-**-2020         1.0  Original version
+Conner Fissell     03-28-2020         Final Version for Project 2
 ----------------------------------------------------------------------------- */
 #ifndef __ATTRIBUTE_H__
 #define __ATTRIBUTE_H__
@@ -24,7 +26,6 @@ Conner Fissell     **-**-2020         1.0  Original version
 #include <vector>
 #include <regex>
 #include <iterator>
-
 #include <stdio.h>
 #include <unistd.h>
 

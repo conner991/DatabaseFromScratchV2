@@ -1,14 +1,19 @@
 /* -----------------------------------------------------------------------------
-FILE NAME:         
-DESCRIPTION:       
+FILE NAME:         Table.h
+DESCRIPTION:       Class file that holds the base class "Table"
 USAGE:             
 COMPILER:          GNU g++ compiler on Linux
-NOTES:             
+NOTES:             This class holds all of the necessary information pertaining to 
+                    a created Table (name, number of attributes, and the attribute 
+                    objects themselves). This class inherits from the Attribute class
+                    and uses many of that class' member functions to handle the metadata
+                    of the table. The driver uses this classes objects and member fucntions
+                    more often than the Attribute classes objects and functions.
 
 MODIFICATION HISTORY:
 Author             Date               Version
 ---------------    ----------         --------------
-Conner Fissell     **-**-2020         1.0  Original version
+Conner Fissell     03-28-2020         Final Version for Project 2
 ----------------------------------------------------------------------------- */
 #ifndef __TABLE_H__
 #define __TABLE_H__
